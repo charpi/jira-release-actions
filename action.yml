@@ -1,11 +1,35 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'jira-release-action'
+description: 'Create or Update a Jira release'
+author: 'Nicolas Charpentier'
 inputs:
-  milliseconds: # change this
+  email:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: Email address associated with api token
+  api_token:
+    required: true
+    description: Jira API token
+  subdomain:
+    required: true
+    description: '{subdomain}.atlassian.net'
+  jira_project:
+    required: true
+    description: 'Id of the JIRA project'
+  release_name:
+    required: true
+    description: Name of the release
+  create:
+    required: false
+    description: Automatically create the release if not present in Jira
+    default: 'false' 
+  tickets:
+    required: false
+    description: Comma separated list of ticket IDs to include in the release. Update the first release-version.
+    default: ''
+  dry_run:
+    description: Dump the config
+    required: false
+    default: 'false'
+
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -21,4 +21,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./
         with:
-          milliseconds: 1000
+          dry_run: ci
+          email: foo@bar
+          api_token: ${{ secrets.JIRA_TOKEN }}
+          subdomain: foobar
+          jira_project: PROJ
+          release_name: name
+          
