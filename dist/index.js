@@ -233,7 +233,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(2186));
 const env_1 = __webpack_require__(9763);
 const api_1 = __webpack_require__(8947);
-// CLI Key 6XzQZ3O2eTkRMiAkbW7O96A8
 function run() {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
@@ -498,6 +497,7 @@ exports.getInput = getInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    process.stdout.write(os.EOL);
     command_1.issueCommand('set-output', { name }, value);
 }
 exports.setOutput = setOutput;
