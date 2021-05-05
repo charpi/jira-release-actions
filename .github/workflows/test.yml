@@ -23,7 +23,7 @@ jobs:
         with:
           dry_run: ci
           email: foo@bar
-          api_token: ${{ secrets.JIRA_TOKEN }}
+          api_token: xxx
           subdomain: foobar
           jira_project: PROJ
           release_name: name
