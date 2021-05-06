@@ -14,16 +14,23 @@ import {Version} from './models'
 
 async function run(): Promise<void> {
   try {
-    if (DRY_RUN === 'ci' || DRY_RUN === 'true') {
+    if (DRY_RUN === 'ci') {
       core.info(`email ${EMAIL}`)
       core.info(`project ${PROJECT}`)
       core.info(`subdomain ${SUBDOMAIN}`)
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
+      return
     }
 
     if (DRY_RUN === 'true') {
+      core.info(`email ${EMAIL}`)
+      core.info(`project ${PROJECT}`)
+      core.info(`subdomain ${SUBDOMAIN}`)
+      core.info(`release ${RELEASE_NAME}`)
+      core.info(`create ${CREATE}`)
+      core.info(`tickets ${TICKETS}`)
       const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
       core.info(`Project loaded ${project.project?.id}`)
       const version = project.getVersion(RELEASE_NAME)

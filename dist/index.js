@@ -236,23 +236,30 @@ function run() {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            if (env_1.DRY_RUN !== undefined) {
+            if (env_1.DRY_RUN === 'ci') {
                 core.info(`email ${env_1.EMAIL}`);
                 core.info(`project ${env_1.PROJECT}`);
                 core.info(`subdomain ${env_1.SUBDOMAIN}`);
                 core.info(`release ${env_1.RELEASE_NAME}`);
                 core.info(`create ${env_1.CREATE}`);
                 core.info(`tickets ${env_1.TICKETS}`);
-                if (env_1.DRY_RUN === 'true') {
-                    const project = yield api_1.Project.create(env_1.EMAIL, env_1.API_TOKEN, env_1.PROJECT, env_1.SUBDOMAIN);
-                    core.info(`Project loaded ${(_a = project.project) === null || _a === void 0 ? void 0 : _a.id}`);
-                    const version = project.getVersion(env_1.RELEASE_NAME);
-                    if (version === undefined) {
-                        core.info(`Version ${env_1.RELEASE_NAME} not found`);
-                    }
-                    else {
-                        core.info(`Version ${env_1.RELEASE_NAME} found`);
-                    }
+                return;
+            }
+            if (env_1.DRY_RUN === 'true') {
+                core.info(`email ${env_1.EMAIL}`);
+                core.info(`project ${env_1.PROJECT}`);
+                core.info(`subdomain ${env_1.SUBDOMAIN}`);
+                core.info(`release ${env_1.RELEASE_NAME}`);
+                core.info(`create ${env_1.CREATE}`);
+                core.info(`tickets ${env_1.TICKETS}`);
+                const project = yield api_1.Project.create(env_1.EMAIL, env_1.API_TOKEN, env_1.PROJECT, env_1.SUBDOMAIN);
+                core.info(`Project loaded ${(_a = project.project) === null || _a === void 0 ? void 0 : _a.id}`);
+                const version = project.getVersion(env_1.RELEASE_NAME);
+                if (version === undefined) {
+                    core.info(`Version ${env_1.RELEASE_NAME} not found`);
+                }
+                else {
+                    core.info(`Version ${env_1.RELEASE_NAME} found`);
                 }
                 return;
             }
