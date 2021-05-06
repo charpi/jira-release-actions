@@ -14,31 +14,25 @@ import {Version} from './models'
 
 async function run(): Promise<void> {
   try {
-    if (DRY_RUN !== undefined) {
+    if (DRY_RUN === 'ci' || DRY_RUN === 'true') {
       core.info(`email ${EMAIL}`)
       core.info(`project ${PROJECT}`)
       core.info(`subdomain ${SUBDOMAIN}`)
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
+    }
 
-      if (DRY_RUN === 'true') {
-        const project = await Project.create(
-          EMAIL,
-          API_TOKEN,
-          PROJECT,
-          SUBDOMAIN
-        )
-        core.info(`Project loaded ${project.project?.id}`)
-        const version = project.getVersion(RELEASE_NAME)
+    if (DRY_RUN === 'true') {
+      const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+      core.info(`Project loaded ${project.project?.id}`)
+      const version = project.getVersion(RELEASE_NAME)
 
-        if (version === undefined) {
-          core.info(`Version ${RELEASE_NAME} not found`)
-        } else {
-          core.info(`Version ${RELEASE_NAME} found`)
-        }
+      if (version === undefined) {
+        core.info(`Version ${RELEASE_NAME} not found`)
+      } else {
+        core.info(`Version ${RELEASE_NAME} found`)
       }
-
       return
     }
 
