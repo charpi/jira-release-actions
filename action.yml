@@ -1,4 +1,4 @@
-name: 'Jira Release Action'
+name: 'Jira Release Action v2'
 description: 'Create or Update a Jira release'
 author: 'Armon Avrahamy'
 inputs:
