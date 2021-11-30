@@ -1,6 +1,6 @@
-name: 'jira-release-action'
+name: 'Jira Release Action'
 description: 'Create or Update a Jira release'
-author: 'Nicolas Charpentier'
+author: 'Armon Avrahamy'
 inputs:
   email:
     required: true
