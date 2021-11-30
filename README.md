@@ -21,8 +21,10 @@ The action can also automatically update the 'Fix Version' field of a list of Ji
 | jira_project | Key of the jira project | Y |
 | release_name | Name of the release | Y |
 | create | Boolean. Create automatically a jira release| N (default: false ) |
+| unrlease | Boolean. Create the Jira release as unreleased| N (default: false ) |
 | tickets | Comma separated list of ticket IDs to include in the release. Update the first release-version. | N (default: '') |
 | dry_run | Dump actions that would be taken | N (default: false) |
+
 
 ### Example
 

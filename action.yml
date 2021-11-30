@@ -29,6 +29,11 @@ inputs:
     description: Dump the config
     required: false
     default: 'false'
+  unrlease:
+    description: 'Create the release as unrleased in Jira'
+    required: false
+    default: 'false'
+
 
 runs:
   using: 'node12'

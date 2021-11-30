@@ -13,3 +13,4 @@ export const CREATE: string = core.getInput('create', {
 })
 export const TICKETS: string = core.getInput('tickets', {required: false})
 export const DRY_RUN: string = core.getInput('dry_run', {required: false})
+export const UNRELEASE: string = core.getInput('unrelease', {required: false})
