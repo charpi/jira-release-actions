@@ -32,7 +32,7 @@ async function run(): Promise<void> {
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
-      core.info(`unrlease ${UNRELEASE}`)
+      core.info(`unrelease ${UNRELEASE}`)
 
       const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
       core.info(`Project loaded ${project.project?.id}`)
