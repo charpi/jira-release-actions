@@ -29,10 +29,10 @@ inputs:
     description: Dump the config
     required: false
     default: 'false'
-  unrlease:
-    description: 'Create the release as unrleased in Jira'
+  release:
+    description: 'Create the version as released'
     required: false
-    default: 'false'
+    default: 'true'
 
 
 runs:

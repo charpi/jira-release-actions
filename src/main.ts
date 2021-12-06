@@ -8,7 +8,7 @@ import {
   CREATE,
   TICKETS,
   DRY_RUN,
-  UNRELEASE
+  RELEASE
 } from './env'
 import {Project} from './api'
 import {Version} from './models'
@@ -22,6 +22,8 @@ async function run(): Promise<void> {
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
+      core.info(`release ${RELEASE}`)
+      
       return
     }
 
@@ -32,7 +34,7 @@ async function run(): Promise<void> {
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
-      core.info(`unrelease ${UNRELEASE}`)
+      core.info(`release ${RELEASE}`)
 
       const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
       core.info(`Project loaded ${project.project?.id}`)
@@ -53,7 +55,7 @@ async function run(): Promise<void> {
     core.debug(`Project loaded ${project.project?.id}`)
 
     let version = project.getVersion(RELEASE_NAME)
-    let not_released = UNRELEASE === 'false';
+    let release = RELEASE == 'true';
 
     if (version === undefined) {
       core.debug(`Version ${RELEASE_NAME} not found`)
@@ -64,7 +66,7 @@ async function run(): Promise<void> {
         const versionToCreate: Version = {
           name: RELEASE_NAME,
           archived: false,
-          released: not_released,
+          released: release,
           releaseDate: new Date().toISOString(),
           projectId: Number(project.project?.id)
         }
@@ -78,7 +80,7 @@ async function run(): Promise<void> {
       const versionToUpdate: Version = {
         ...version,
         self: undefined,
-        released: not_released,
+        released: release,
         releaseDate: new Date().toISOString(),
         userReleaseDate: undefined
       }
