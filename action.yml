@@ -20,7 +20,11 @@ inputs:
   create:
     required: false
     description: Automatically create the release if not present in Jira
-    default: 'false' 
+    default: 'false'
+  released:
+    required: false
+    description: Change or create version as released or unreleased
+    default: 'true'
   tickets:
     required: false
     description: Comma separated list of ticket IDs to include in the release. Update the first release-version.
