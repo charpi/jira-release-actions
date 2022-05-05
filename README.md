@@ -17,7 +17,8 @@ The action can also automatically update the 'Fix Version' field of a list of Ji
 |---|---|---|
 | email  | Jira login | Y |
 | api_token | Jira api token | Y |
-| subdomain | Jira cloud instance. '[domain].atlassian.net' | Y |
+| subdomain | Jira cloud instance account subdomain. '[subdomain].atlassian.net' | Y |
+| domain | Jira cloud instance root domain. | N (default: atlassian.net) |
 | jira_project | Key of the jira project | Y |
 | release_name | Name of the release | Y |
 | create | Boolean. Create automatically a jira release| N (default: false ) |

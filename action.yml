@@ -11,6 +11,10 @@ inputs:
   subdomain:
     required: true
     description: '{subdomain}.atlassian.net'
+  domain:
+    required: false
+    description: Jira cloud domain
+    default: atlassian.net
   jira_project:
     required: true
     description: 'Id of the JIRA project'
@@ -20,7 +24,7 @@ inputs:
   create:
     required: false
     description: Automatically create the release if not present in Jira
-    default: 'false' 
+    default: 'false'
   tickets:
     required: false
     description: Comma separated list of ticket IDs to include in the release. Update the first release-version.
