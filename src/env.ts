@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 
 export const EMAIL: string = core.getInput('email', {required: true})
 export const API_TOKEN: string = core.getInput('api_token', {required: true})
+export const DOMAIN: string = core.getInput('domain', {required: false})
 export const SUBDOMAIN: string = core.getInput('subdomain', {required: true})
 
 export const RELEASE_NAME: string = core.getInput('release_name', {

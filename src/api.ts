@@ -31,7 +31,7 @@ export class Project {
   async createVersion(version: Version): Promise<Version> {
     try {
       const response = await axios.post(
-        `https://${this.domain}.atlassian.net/rest/api/3/version`,
+        `https://${this.domain}/rest/api/3/version`,
         version,
         this._authHeaders()
       )
@@ -45,7 +45,7 @@ export class Project {
     try {
       core.debug(JSON.stringify(version))
       const response = await axios.put(
-        `https://${this.domain}.atlassian.net/rest/api/3/version/${version.id}`,
+        `https://${this.domain}/rest/api/3/version/${version.id}`,
         version,
         this._authHeaders()
       )
@@ -59,7 +59,7 @@ export class Project {
   async updateIssue(ticket: string, version: string) {
     try {
       const response = await axios.put(
-        `https://${this.domain}.atlassian.net/rest/api/3/issue/${ticket}`,
+        `https://${this.domain}/rest/api/3/issue/${ticket}`,
         {
           update: {
             fixVersions: [
@@ -90,7 +90,7 @@ export class Project {
   async _load(): Promise<Project> {
     try {
       const response = await axios.get(
-        `https://${this.domain}.atlassian.net/rest/api/3/project/${this.name}?properties=versions,key,id,name`,
+        `https://${this.domain}/rest/api/3/project/${this.name}?properties=versions,key,id,name`,
         this._authHeaders()
       )
       this.project = response?.data

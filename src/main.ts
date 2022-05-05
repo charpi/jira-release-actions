@@ -3,6 +3,7 @@ import {
   EMAIL,
   API_TOKEN,
   SUBDOMAIN,
+  DOMAIN,
   RELEASE_NAME,
   PROJECT,
   CREATE,
@@ -18,20 +19,25 @@ async function run(): Promise<void> {
       core.info(`email ${EMAIL}`)
       core.info(`project ${PROJECT}`)
       core.info(`subdomain ${SUBDOMAIN}`)
+      core.info(`domain ${DOMAIN}`)
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
       return
     }
 
+    const domain = `${SUBDOMAIN}.${DOMAIN || 'atlassian.net'}`
+
     if (DRY_RUN === 'true') {
       core.info(`email ${EMAIL}`)
       core.info(`project ${PROJECT}`)
       core.info(`subdomain ${SUBDOMAIN}`)
+      core.info(`domain ${DOMAIN}`)
       core.info(`release ${RELEASE_NAME}`)
       core.info(`create ${CREATE}`)
       core.info(`tickets ${TICKETS}`)
-      const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+
+      const project = await Project.create(EMAIL, API_TOKEN, PROJECT, domain)
       core.info(`Project loaded ${project.project?.id}`)
       const version = project.getVersion(RELEASE_NAME)
 
@@ -43,7 +49,7 @@ async function run(): Promise<void> {
       return
     }
 
-    const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+    const project = await Project.create(EMAIL, API_TOKEN, PROJECT, domain)
 
     core.debug(`Project loaded ${project.project?.id}`)
 
