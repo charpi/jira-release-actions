@@ -43,7 +43,7 @@ jobs:
       uses: charpi/jira-release-actions@latest
       with:
         email: ${{ secrets.JIRA_EMAIL }}
-        api-token: ${{ secrets.JIRA_TOKEN }}
+        api_token: ${{ secrets.JIRA_TOKEN }}
         subdomain: example
         release_name: ${{ needs.get-next-app-version.outputs.version-id}}
 ```
