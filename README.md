@@ -40,7 +40,7 @@ jobs:
     name: Release Jira Version
     runs-on: ubuntu-latest
     steps:
-      uses: charpi/jira-release-action@latest
+      uses: charpi/jira-release-actions@latest
       with:
         email: ${{ secrets.JIRA_EMAIL }}
         api-token: ${{ secrets.JIRA_TOKEN }}
