@@ -1,40 +1,40 @@
-name: 'Jira Release Action v2'
-description: 'Create or Update a Jira release'
+name: 'Jira Release Action v3'
+description: 'Create / Update a Jira release'
 author: 'Nicolas Charpentier'
 inputs:
   email:
-    required: true
     description: Email address associated with api token
+    required: true
   api_token:
-    required: true
     description: Jira API token
+    required: true
   subdomain:
-    required: true
     description: '{subdomain}.atlassian.net'
+    required: true
   jira_project:
-    required: true
     description: 'Id of the JIRA project'
-  release_name:
     required: true
+  release_name:
     description: Name of the release
+    required: true
   create:
-    required: false
     description: Automatically create the release if not present in Jira
-    default: 'false' 
-  tickets:
+    default: 'false'
     required: false
+  tickets:
     description: Comma separated list of ticket IDs to include in the release. Update the first release-version.
     default: ''
+    required: false
   dry_run:
     description: Dump the config
-    required: false
     default: 'false'
+    required: false
   release:
     description: 'Create the version as released'
+    default: 'false'
     required: false
-    default: 'true'
 
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

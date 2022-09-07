@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/charpi/jira-release-action.git"
+    "url": "git+https://github.com/StalemeteInc/jira-release-action.git"
   },
   "keywords": [
     "actions",
@@ -25,7 +25,7 @@
   "author": "Nicolas Charpentier",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.7",
+    "@actions/core": "^1.9.1",
     "axios": "^0.21.1"
   },
   "devDependencies": {

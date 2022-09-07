@@ -102,3 +102,5 @@ token.json
 
 # replit
 .replit
+.vscode/
+.idea/

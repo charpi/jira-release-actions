@@ -1,6 +1,6 @@
-import * as core from '@actions/core'
-import axios, {AxiosError} from 'axios'
-import {Version, ProjectDTO} from './models'
+import { debug } from '@actions/core'
+import axios, { AxiosError } from 'axios'
+import { Version, ProjectDTO } from './models'
 
 export class Project {
   email: string
@@ -20,7 +20,7 @@ export class Project {
   getVersion(rel: string): Version | undefined {
     if (this.project === undefined) return undefined
     else {
-      const result = this.project.versions?.filter(i => i.name === rel)
+      const result = this.project.versions?.filter((i) => i.name === rel)
       if (result === undefined) return undefined
       if (result.length === 0) {
         return undefined
@@ -43,7 +43,7 @@ export class Project {
 
   async updateVersion(version: Version): Promise<Version> {
     try {
-      core.debug(JSON.stringify(version))
+      debug(JSON.stringify(version))
       const response = await axios.put(
         `https://${this.domain}.atlassian.net/rest/api/3/version/${version.id}`,
         version,
@@ -64,7 +64,7 @@ export class Project {
           update: {
             fixVersions: [
               {
-                add: {id: version}
+                add: { id: version }
               }
             ]
           }
@@ -77,12 +77,7 @@ export class Project {
     }
   }
 
-  static async create(
-    email: string,
-    token: string,
-    name: string,
-    domain: string
-  ): Promise<Project> {
+  static async create(email: string, token: string, name: string, domain: string): Promise<Project> {
     const result = new Project(email, token, name, domain)
     return result._load()
   }
@@ -103,9 +98,7 @@ export class Project {
   _authHeaders(): Object {
     return {
       headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${this.email}:${this.token}`
-        ).toString('base64')}`,
+        Authorization: `Basic ${Buffer.from(`${this.email}:${this.token}`).toString('base64')}`,
         Accept: 'application/json'
       }
     }
@@ -113,20 +106,13 @@ export class Project {
 }
 
 const toMoreDescriptiveError = (error: unknown): Error | unknown => {
-  if (
-    isAxiosError(error) &&
-    error.response?.status === 404 &&
-    Array.isArray(error.response.data?.errorMessages)
-  ) {
-    return new Error(
-      `${error.response.data?.errorMessages[0]} (this may be due to a missing/invalid API key)`
-    )
+  if (isAxiosError(error) && error.response?.status === 404 && Array.isArray(error.response.data?.errorMessages)) {
+    return new Error(`${error.response.data?.errorMessages[0]} (this may be due to a missing/invalid API key)`)
   } else {
-    core.debug(`error: ${error}`)
+    debug(`error: ${error}`)
     return error
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isAxiosError = (error: any): error is AxiosError =>
-  error?.isAxiosError ?? false
+const isAxiosError = (error: any): error is AxiosError => error?.isAxiosError ?? false
