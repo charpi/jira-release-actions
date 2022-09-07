@@ -1,7 +1,8 @@
 import { info, debug, setFailed } from '@actions/core'
 import { EMAIL, API_TOKEN, SUBDOMAIN, RELEASE_NAME, PROJECT, CREATE, TICKETS, DRY_RUN, RELEASE } from './env'
-import { Project } from './api'
-import { Version } from './models'
+import { API } from './api'
+import * as DebugMessages from './constants/debug-messages'
+import { CreateVersionParams, UpdateVersionParams } from './types'
 
 async function run(): Promise<void> {
   try {
@@ -26,64 +27,63 @@ async function run(): Promise<void> {
       info(`tickets ${TICKETS}`)
       info(`release ${RELEASE}`)
 
-      const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
-      info(`Project loaded ${project.project?.id}`)
+      const api = new API(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+      const project = await api.loadProject()
+      info(DebugMessages.PROJECT_LOADED(project.id))
 
-      const version = project.getVersion(RELEASE_NAME)
+      const version = project.versions.find((v) => v.name === RELEASE_NAME)
 
       if (version === undefined) {
-        info(`Version ${RELEASE_NAME} not found`)
+        info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
       } else {
-        info(`Version ${RELEASE_NAME} found`)
+        info(DebugMessages.VERSION_FOUND(RELEASE_NAME))
       }
 
       return
     }
 
-    const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+    const api = new API(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+    const project = await api.loadProject()
 
-    debug(`Project loaded ${project.project?.id}`)
+    debug(DebugMessages.PROJECT_LOADED(project.id))
 
-    let version = project.getVersion(RELEASE_NAME)
+    let version = project.versions.find((v) => v.name === RELEASE_NAME)
     const release = RELEASE === true
 
     if (version === undefined) {
-      debug(`Version ${RELEASE_NAME} not found`)
+      debug(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
 
       if (CREATE === true) {
-        debug(`Version ${RELEASE_NAME} is going to the created`)
+        debug(DebugMessages.VERSION_WILL_BE_CREATED(RELEASE_NAME))
 
-        const versionToCreate: Version = {
+        const versionToCreate: CreateVersionParams = {
           name: RELEASE_NAME,
-          archived: false,
           released: release,
-          releaseDate: new Date().toISOString(),
-          projectId: Number(project.project?.id)
+          projectId: Number(project.id),
+          ...(release && { releaseDate: new Date().toISOString() })
         }
 
-        version = await project.createVersion(versionToCreate)
+        version = await api.createVersion(versionToCreate)
         debug(versionToCreate.name)
       }
     } else {
-      debug(`Version ${RELEASE_NAME} found and is going to be updated`)
+      debug(DebugMessages.VERSION_WILL_BE_UPDATED(RELEASE_NAME))
 
-      const versionToUpdate: Version = {
-        ...version,
-        self: undefined,
+      const versionToUpdate: UpdateVersionParams = {
         released: release,
-        releaseDate: new Date().toISOString(),
-        userReleaseDate: undefined
+        releaseDate: new Date().toISOString()
       }
-      version = await project.updateVersion(versionToUpdate)
+      version = await api.updateVersion(version.id, versionToUpdate)
     }
 
     if (TICKETS !== '') {
       const tickets = TICKETS.split(',')
-      // eslint-disable-next-line github/array-foreach
-      tickets.forEach((ticket) => {
-        debug(`Going to update ticket ${ticket}`)
-        if (version?.id !== undefined) project.updateIssue(ticket, version?.id)
-      })
+      for (const ticket of tickets) {
+        debug(DebugMessages.UPDATING_TICKET(ticket))
+        if (version?.id !== undefined) {
+          api.updateIssue(ticket, version?.id)
+        }
+      }
     }
   } catch (_e) {
     const e: Error = _e as Error
