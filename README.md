@@ -1,8 +1,6 @@
-# Jira Release Action
+# Jira Release Action v3
 
-<p align="center">
-  <a href="https://github.com/charpi/jira-release-actions"><img alt="jira-release-action status" src="https://github.com/carpi/jira-release-actions/workflows/build-test/badge.svg"></a>
-</p>
+TODO: Update the README file
 
 This Github action connects your CI and your Jira instance by creating releases as part of your CI process.
 
