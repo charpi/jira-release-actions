@@ -11,7 +11,7 @@ The action can also automatically update the 'Fix Version' field of a list of Ji
 
 | Name | Description | Required? | Type |
 |---|---|---|---|
-| email  | Email address, used to log into Jira | Yes | String |
+| email  | Email address used to log into Jira account | Yes | String |
 | api_token | Jira API token | Yes | String |
 | subdomain | Subdomain of your Jira project, '[domain].atlassian.net' | Yes | String |
 | jira_project | Key of the jira project | Yes | String |
