@@ -58,6 +58,7 @@ async function run(): Promise<void> {
         }
 
         version = await api.createVersion(versionToCreate)
+        info(DebugMessages.VERSION_CREATED(RELEASE_NAME))
       }
     } else {
       info(DebugMessages.VERSION_WILL_BE_UPDATED(RELEASE_NAME))
@@ -67,6 +68,7 @@ async function run(): Promise<void> {
         releaseDate: new Date().toISOString()
       }
       version = await api.updateVersion(version.id, versionToUpdate)
+      info(DebugMessages.VERSION_UPDATED(RELEASE_NAME))
     }
 
     if (TICKETS !== '') {
@@ -76,6 +78,7 @@ async function run(): Promise<void> {
 
         if (version?.id !== undefined) {
           api.updateIssue(ticket, version.id)
+          info(DebugMessages.TICKET_UPDATED(ticket, version.id))
         }
       }
     }

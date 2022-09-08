@@ -1,6 +1,9 @@
 name: 'Jira Release Action v3'
 description: 'Create / Update a Jira release'
 author: 'Nicolas Charpentier'
+branding:
+  icon: box
+  color: yellow
 inputs:
   email:
     description: Email address used to log into Jira account
