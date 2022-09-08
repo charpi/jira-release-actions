@@ -60,4 +60,4 @@ jobs:
 
 * [Jira Basic authentication](https://developer.atlassian.com/server/jira/platform/basic-authentication/)
 * [Code inspiration](https://github.com/jimyang-9/release-jira-fix-version/)
-* [Repository the code was forked from](https://github.com/charpi/jira-release-actions)
+* [Repository the code was forked from](https://github.com/armona/jira-release-actions)
