@@ -4,16 +4,13 @@ import { CreateVersionParams, JiraProject, JiraVersion, UpdateVersionParams } fr
 import { toMoreDescriptiveError } from './utils'
 
 export class API {
-  email: string
-  token: string
-  name: string
+  authToken: string
+  projectName: string
   domain: string
-  project?: JiraProject
 
   constructor(email: string, token: string, name: string, domain: string) {
-    this.email = email
-    this.token = token
-    this.name = name
+    this.authToken = `${Buffer.from(`${email}:${token}`).toString('base64')}`
+    this.projectName = name
     this.domain = domain
   }
 
@@ -71,7 +68,7 @@ export class API {
   async loadProject(): Promise<JiraProject> {
     try {
       const response = await axios.get<JiraProject>(
-        `https://${this.domain}.atlassian.net/rest/api/3/project/${this.name}?properties=versions,key,id,name`,
+        `https://${this.domain}.atlassian.net/rest/api/3/project/${this.projectName}?properties=versions,key,id,name`,
         { headers: this._headers() }
       )
 
@@ -83,7 +80,7 @@ export class API {
 
   _headers(): { Authorization: string; Accept: string; 'Content-Type': string } {
     return {
-      Authorization: `Basic ${Buffer.from(`${this.email}:${this.token}`).toString('base64')}`,
+      Authorization: `Basic ${this.authToken}`,
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
