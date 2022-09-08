@@ -19,7 +19,7 @@ The action can also automatically update the 'Fix Version' field of a list of Ji
 | create | Create a Jira release. Defaults to false. | No | Boolean |
 | release | Mark Jira version as released. Defaults to false. | No | Boolean |
 | tickets | Comma-separated list of ticket IDs to include in the release. Defaults to ''. | No | String |
-| dry_run | Perform only reading actions and show the logs. Defaults to false. | No | 'ci' / true / false |
+| dry_run | Perform only read actions and show the logs. Defaults to false. | No | 'ci' / true / false |
 
 
 ### Example
