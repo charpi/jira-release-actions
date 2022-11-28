@@ -1,5 +1,5 @@
 import { info, setFailed } from '@actions/core'
-import { EMAIL, API_TOKEN, SUBDOMAIN, RELEASE_NAME, PROJECT, CREATE, TICKETS, DRY_RUN, RELEASE } from './env'
+import { EMAIL, API_TOKEN, SUBDOMAIN, RELEASE_NAME, PROJECT, CREATE, TICKETS, DRY_RUN, RELEASE, ARCHIVE } from './env'
 import { API } from './api'
 import * as DebugMessages from './constants/debug-messages'
 import { CreateVersionParams, UpdateVersionParams } from './types'
@@ -14,6 +14,7 @@ const printConfiguration = (): void => {
       * create: ${CREATE}
       * tickets: ${TICKETS}
       * release: ${RELEASE}
+      * archive: ${ARCHIVE}
   `)
 }
 
@@ -43,6 +44,7 @@ async function run(): Promise<void> {
 
     let version = project.versions.find((v) => v.name === RELEASE_NAME)
     const release = RELEASE === true
+    const archive = ARCHIVE === true
 
     if (version === undefined) {
       info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
@@ -54,7 +56,8 @@ async function run(): Promise<void> {
           name: RELEASE_NAME,
           released: release,
           projectId: Number(project.id),
-          ...(release && { releaseDate: new Date().toISOString() })
+          ...(release && { releaseDate: new Date().toISOString() }),
+          archived: archive
         }
 
         version = await api.createVersion(versionToCreate)
@@ -65,7 +68,8 @@ async function run(): Promise<void> {
 
       const versionToUpdate: UpdateVersionParams = {
         released: release,
-        releaseDate: new Date().toISOString()
+        releaseDate: new Date().toISOString(),
+        archived: archive
       }
       version = await api.updateVersion(version.id, versionToUpdate)
       info(DebugMessages.VERSION_UPDATED(RELEASE_NAME))

@@ -1,6 +1,6 @@
-name: 'Jira Release Action v3'
+name: 'Jira Release Action'
 description: 'Create / Update a Jira release'
-author: 'Nicolas Charpentier'
+author: 'Justin Liu'
 branding:
   icon: box
   color: yellow
@@ -27,6 +27,10 @@ inputs:
   release:
     description: 'Create the version as released'
     default: 'false'
+    required: false
+  archive:
+    description: 'Create the version as archived'
+    default: 'true'
     required: false
   tickets:
     description: Comma-separated list of ticket IDs to include in the release.
