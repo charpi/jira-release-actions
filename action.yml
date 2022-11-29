@@ -1,5 +1,5 @@
 name: 'Jira Release/Archive Action'
-description: 'Create / Update a Jira release'
+description: 'Create, Release or Archive a Jira Fix Version'
 author: 'Justin Liu'
 branding:
   icon: box
