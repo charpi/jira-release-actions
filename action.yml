@@ -1,4 +1,4 @@
-name: 'Jira Release Action'
+name: 'Jira Release/Archive Action'
 description: 'Create / Update a Jira release'
 author: 'Justin Liu'
 branding:
@@ -30,7 +30,7 @@ inputs:
     required: false
   archive:
     description: 'Create the version as archived'
-    default: 'true'
+    default: 'false'
     required: false
   tickets:
     description: Comma-separated list of ticket IDs to include in the release.
