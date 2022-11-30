@@ -47,7 +47,7 @@ async function run(): Promise<void> {
     const archive = ARCHIVE === true
 
     if (version === undefined) {
-      // Create new release and ignore ARCHIVE value
+      // Create new release and ignore ARCHIVE value, release date will use Australia/Melbourne timezone
       info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
 
       if (CREATE) {
@@ -57,7 +57,7 @@ async function run(): Promise<void> {
           name: RELEASE_NAME,
           released: release === true && archive !== true,
           projectId: Number(project.id),
-          ...(release && { releaseDate: new Date().toISOString() }),
+          ...(release && { releaseDate: new Date(Date.now() + 10 * 60 * 60 * 1000).toISOString() }),
           archived: false
         }
 
@@ -70,7 +70,7 @@ async function run(): Promise<void> {
 
       const versionToUpdate: UpdateVersionParams = {
         released: release,
-        ...(release && { releaseDate: new Date().toISOString() }),
+        ...(release && { releaseDate: new Date(Date.now() + 10 * 60 * 60 * 1000).toISOString() }),
         archived: false
       }
       version = await api.updateVersion(version.id, versionToUpdate)
