@@ -98,7 +98,7 @@ async function run(): Promise<void> {
       // if archive then we ignore release value
       const versionToUpdate: UpdateVersionParams = {
         released: false,
-        ...(release && { releaseDate: new Date().toISOString() }),
+        releaseDate: undefined,
         archived: archive
       }
       if (version?.id !== undefined) {
