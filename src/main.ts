@@ -10,7 +10,7 @@ const printConfiguration = (): void => {
       * email ${EMAIL}
       * project: ${PROJECT}
       * subdomain: ${SUBDOMAIN}
-      * release: ${RELEASE_NAME}
+      * release_name: ${RELEASE_NAME}
       * create: ${CREATE}
       * tickets: ${TICKETS}
       * release: ${RELEASE}
@@ -47,9 +47,10 @@ async function run(): Promise<void> {
     const archive = ARCHIVE === true
 
     if (version === undefined) {
+      // Create new release and ignore ARCHIVE value
       info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
 
-      if (CREATE === true) {
+      if (CREATE) {
         info(DebugMessages.VERSION_WILL_BE_CREATED(RELEASE_NAME))
 
         const versionToCreate: CreateVersionParams = {
@@ -57,33 +58,53 @@ async function run(): Promise<void> {
           released: release,
           projectId: Number(project.id),
           ...(release && { releaseDate: new Date().toISOString() }),
-          archived: archive
+          archived: false
         }
 
         version = await api.createVersion(versionToCreate)
         info(DebugMessages.VERSION_CREATED(RELEASE_NAME))
       }
     } else {
+      // update release and ignore ARCHIVE value
       info(DebugMessages.VERSION_WILL_BE_UPDATED(RELEASE_NAME))
 
       const versionToUpdate: UpdateVersionParams = {
         released: release,
-        releaseDate: new Date().toISOString(),
-        archived: archive
+        ...(release && { releaseDate: new Date().toISOString() }),
+        archived: false
       }
       version = await api.updateVersion(version.id, versionToUpdate)
       info(DebugMessages.VERSION_UPDATED(RELEASE_NAME))
     }
 
+    // Assign JIRA issues to Release
+    let issue = undefined
     if (TICKETS !== '') {
       const tickets = TICKETS.split(',')
+
       for (const ticket of tickets) {
         info(DebugMessages.UPDATING_TICKET(ticket))
 
         if (version?.id !== undefined) {
-          api.updateIssue(ticket, version.id)
+          issue = await api.updateIssue(ticket, version.id)
           info(DebugMessages.TICKET_UPDATED(ticket, version.id))
         }
+      }
+    }
+
+    // Now let's do the ARCHIVE business
+    if (archive && issue !== undefined) {
+      info(DebugMessages.VERSION_WILL_BE_ARCHIVED(RELEASE_NAME))
+
+      // if archive then we ignore release value
+      const versionToUpdate: UpdateVersionParams = {
+        released: false,
+        ...(release && { releaseDate: new Date().toISOString() }),
+        archived: archive
+      }
+      if (version?.id !== undefined) {
+        version = await api.updateVersion(version.id, versionToUpdate)
+        info(DebugMessages.VERSION_UPDATED(RELEASE_NAME))
       }
     }
   } catch (_e) {

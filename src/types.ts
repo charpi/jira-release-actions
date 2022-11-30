@@ -20,7 +20,7 @@ export type JiraProject = {
 export type UpdateVersionParams = {
   released: boolean
   archived: boolean
-  releaseDate: string
+  releaseDate?: string | undefined
 }
 
 export type CreateVersionParams = {
