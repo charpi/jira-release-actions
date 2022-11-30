@@ -78,7 +78,6 @@ async function run(): Promise<void> {
     }
 
     // Assign JIRA issues to Release
-    let issue = undefined
     if (TICKETS !== '') {
       const tickets = TICKETS.split(',')
 
@@ -86,14 +85,14 @@ async function run(): Promise<void> {
         info(DebugMessages.UPDATING_TICKET(ticket))
 
         if (version?.id !== undefined) {
-          issue = await api.updateIssue(ticket, version.id)
+          await api.updateIssue(ticket, version.id)
           info(DebugMessages.TICKET_UPDATED(ticket, version.id))
         }
       }
     }
 
     // Now let's do the ARCHIVE business
-    if (archive && issue !== undefined) {
+    if (archive) {
       info(DebugMessages.VERSION_WILL_BE_ARCHIVED(RELEASE_NAME))
 
       // if archive then we ignore release value
