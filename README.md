@@ -33,7 +33,7 @@ jobs:
     name: Release Jira Fix Version
     runs-on: ubuntu-latest
     steps:
-      uses: justin-jhg/jira-release-actions@v0.1
+      uses: justin-jhg/jira-release-actions@v0.2
       with:
         email: ${{ secrets.JIRA_EMAIL }}
         api_token: ${{ secrets.JIRA_TOKEN }}
@@ -49,4 +49,6 @@ jobs:
 ## Reference
 
 * [Jira Basic authentication](https://developer.atlassian.com/server/jira/platform/basic-authentication/)
-* [Repository the code was forked from](https://github.com/armona/jira-release-actions)
+* [Repository the code was forked from](https://github.com/StalemateInc/jira-release-action)
+* https://github.com/actions/typescript-action
+* https://github.com/vercel/ncc
