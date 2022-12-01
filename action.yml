@@ -12,7 +12,7 @@ inputs:
     description: Access Token for Authorization. Example - HXe8DGg1iJd2AopzyxkFB7F2 (How To)
     required: true
   jira_user_email:
-    description: email of the user for which Access Token was created for . Example: human@example.com
+    description: email of the user for which Access Token was created for . Example - human@example.com
     required: true
   jira_project:
     description: ID of Jira project (usually all caps, like PROJ)
