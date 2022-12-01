@@ -1,10 +1,10 @@
 # Jira Release/Archive Action 
 
-This Github action connects your CI and your Jira instance by creating release and assign Jira issues to the release as part of your CI process.
+This Github action connects your CI and your Jira instance by creating release(Fix Version) and assign Jira issues to the release as part of your CI process.
 
-- Create a JIRA release (Fix Version)
+- Create a JIRA release (Fix Version), release date will be today's date in UTC.
 - Assign JIRA Issue Key to the release (Fix Version)
-- Release can be created/updated to released or archived
+- Release can be created as archived as well
 
 
 ## Usage
@@ -13,16 +13,14 @@ This Github action connects your CI and your Jira instance by creating release a
 
 | Name | Description | Required? | Type |
 |---|---|---|---|
-| email  | Email address used to log into Jira account | Yes | String |
-| api_token | Jira API token | Yes | String |
-| subdomain | Subdomain of your Jira project, '[domain].atlassian.net' | Yes | String |
+| jira_base_url  | URL of Jira instance. Example: https://<yourdomain>.atlassian.net | Yes | String |
+| jira_api_token | Access Token for Authorization. Example: HXe8DGg1iJd2AopzyxkFB7F2 [How To](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) | Yes | String |
+| jira_user_email | email of the user for which Access Token was created for . Example: human@example.com | Yes | String |
 | jira_project | Key of the jira project | Yes | String |
 | release_name | Name of the release, Fix Version name | Yes | String |
-| create | Create a Jira release. Defaults to false. | No | Boolean |
 | release | Mark Jira fix version as released. Defaults to false. | No | Boolean |
 | archive | Mark Jira fix version as archived. Defaults to false. | No | Boolean |
 | tickets | Comma-separated list of Jira Issue Keys to include in the release. Defaults to ''. | No | String |
-| dry_run | Perform only read actions and show the logs. Defaults to false. | No | 'ci' / true / false |
 
 
 ### Example
@@ -35,13 +33,12 @@ jobs:
     steps:
       uses: justin-jhg/jira-release-actions@v0.2
       with:
-        email: ${{ secrets.JIRA_EMAIL }}
-        api_token: ${{ secrets.JIRA_TOKEN }}
+        jira_base_url: ${{ secrets.JIRA_BASE_URL }}
+        jira_user_email: ${{ secrets.JIRA_USER_EMAIL }}
+        jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+        jira_project: PROJ
         release_name: v9.0.2
         tickets: PROJ-1234,PROJ-5678
-        subdomain: companyname
-        jira_project: PROJ
-        create: true
         release: true
         archive: false
 ```
