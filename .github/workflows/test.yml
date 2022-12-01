@@ -20,9 +20,10 @@ jobs:
       - uses: ./
         with:
           dry_run: ci
-          email: example@example.com
-          api_token: foobar
-          subdomain: subdomain
+          jira_user_email: example@example.com
+          jira_api_token: foobar
+          jira_base_url: http://
           jira_project: PROJ
           release_name: New Release Name
+          archived: true
           
