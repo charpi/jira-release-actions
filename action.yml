@@ -5,25 +5,21 @@ branding:
   icon: box
   color: yellow
 inputs:
-  email:
-    description: Email address used to log into Jira account
+  jira_base_url:
+    description: URL of Jira instance. Example - https://<yourdomain>.atlassian.net
     required: true
-  api_token:
-    description: Jira personal access token associated with the email
+  jira_api_token:
+    description: Access Token for Authorization. Example - HXe8DGg1iJd2AopzyxkFB7F2 (How To)
     required: true
-  subdomain:
-    description: '{subdomain}.atlassian.net'
+  jira_user_email:
+    description: email of the user for which Access Token was created for . Example: human@example.com
     required: true
   jira_project:
     description: ID of Jira project (usually all caps, like PROJ)
     required: true
   release_name:
-    description: Name of the release
+    description: Name of the release, fix version
     required: true
-  create:
-    description: Create a Jira release.
-    default: 'false'
-    required: false
   release:
     description: 'Create the version as released'
     default: 'false'
@@ -33,9 +29,13 @@ inputs:
     default: 'false'
     required: false
   tickets:
-    description: Comma-separated list of ticket IDs to include in the release.
+    description: Comma-separated list of Jira issue keys to be assigned to the release.
     default: ''
     required: false
+  create:
+    description: Create a Jira release.
+    default: 'true'
+    required: false  
   dry_run:
     description: Perform only read actions and show the logs.
     default: 'false'
