@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://github.com/Justin-JHG/jira-release-actions/actions"><img alt="typescript-action status" src="https://github.com/Justin-JHG/jira-release-actions/actions/workflows/build-test/badge.svg"></a>
+</p>
+
 # Jira Release/Archive Action 
 
 This Github action connects your CI and your Jira instance by creating release(Fix Version) and assign Jira issues to the release as part of your CI process.
