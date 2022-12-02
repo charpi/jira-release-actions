@@ -1,6 +1,7 @@
 <p align="center">
-  <a href="https://github.com/Justin-JHG/jira-release-actions/actions"><img alt="typescript-action status" src="https://github.com/Justin-JHG/jira-release-actions/actions/workflows/build-test/badge.svg"></a>
+  <a href="https://github.com/Justin-JHG/jira-release-actions/actions"><src="https://github.com/Justin-JHG/jira-release-actions/actions/workflows/build-test/badge.svg"></a>
 </p>
+
 
 # Jira Release/Archive Action 
 
