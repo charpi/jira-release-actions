@@ -1,9 +1,6 @@
 <p align="center">
-  <a href="https://github.com/Justin-JHG/jira-release-actions/actions"><src="https://github.com/Justin-JHG/jira-release-actions/actions/workflows/build-test/badge.svg"></a>
+[![build-test](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/test.yml/badge.svg)](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/test.yml)
 </p>
-
-[![GitHub Actions Status](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/build-test/badge.svg)](https://github.com/Justin-JHG/jira-release-actions)
-
 
 # Jira Release/Archive Action 
 
