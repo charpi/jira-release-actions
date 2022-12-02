@@ -9,21 +9,7 @@ This Github action connects your CI and your Jira instance by creating release(F
 
 ## Usage
 
-### Input
-
-|Name |Description |Required? |Type |
-|---|---|---|---|
-| jira_base_url  | URL of Jira instance. Example: https://<yourdomain>.atlassian.net | Yes | String |
-| jira_api_token | Access Token for Authorization. Example: HXe8DGg1iJd2AopzyxkFB7F2 [How To](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) | Yes | String |
-| jira_user_email | email of the user for which Access Token was created for. Example: human@example.com | Yes | String |
-| jira_project | Key of the jira project | Yes | String |
-| release_name | Name of the release, Fix Version name | Yes | String |
-| release | Mark Jira fix version as released. Defaults to false. | No | Boolean |
-| archive | Mark Jira fix version as archived. Defaults to false. | No | Boolean |
-| tickets | Comma-separated list of Jira Issue Keys to include in the release. Defaults to ''. | No | String |
-
-
-### Example
+Example workflow:
 
 ```yaml
 jobs:
@@ -42,6 +28,25 @@ jobs:
         release: true
         archive: false
 ```
+
+----
+
+## Action Spec:
+
+### Inputs
+
+|Name |Description |Required? |Type |
+|---|---|---|---|
+| jira_base_url  | URL of Jira instance. Example: `https://<yourdomain>.atlassian.net` | Yes | String |
+| jira_api_token | **Access Token** for Authorization. Example: `HXe8DGg1iJd2AopzyxkFB7F2` ([How To](https://confluence.atlassian.com/cloud/api-tokens-938839638.html)) | Yes | String |
+| jira_user_email | email of the user for which **Access Token** was created for . Example: `human@example.com` | Yes | String |
+| jira_project | Key of the jira project | Yes | String |
+| release_name | Name of the release, Fix Version name | Yes | String |
+| release | Mark Jira fix version as released. Defaults to false. | No | Boolean |
+| archive | Mark Jira fix version as archived. Defaults to false. | No | Boolean |
+| tickets | Comma-separated list of Jira Issue Keys to include in the release. Defaults to ''. | No | String |
+
+
 
 ## Reference
 
