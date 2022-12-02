@@ -20,14 +20,14 @@ jobs:
     name: Release Jira Fix Version
     runs-on: ubuntu-latest
     steps:
-      uses: justin-jhg/jira-release-actions@v0.3
+      uses: justin-jhg/jira-release-actions@v0.4.0
       with:
         jira_base_url: ${{ secrets.JIRA_BASE_URL }}
         jira_user_email: ${{ secrets.JIRA_USER_EMAIL }}
         jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
-        jira_project: PROJ
+        jira_project: CI
         release_name: v9.0.2
-        tickets: PROJ-1234,PROJ-5678
+        tickets: CI-123,CI-456
         release: true
         archive: false
 ```
@@ -44,7 +44,7 @@ jobs:
 | jira_api_token | **Access Token** for Authorization. Example: `HXe8DGg1iJd2AopzyxkFB7F2` ([How To](https://confluence.atlassian.com/cloud/api-tokens-938839638.html)) | Yes | String |
 | jira_user_email | email of the user for which **Access Token** was created for . Example: `human@example.com` | Yes | String |
 | jira_project | Key of the jira project | Yes | String |
-| release_name | Name of the release, Fix Version name | Yes | String |
+| release_name | Name of the release (Fix Version) | Yes | String |
 | release | Mark Jira fix version as released. Defaults to false. | No | Boolean |
 | archive | Mark Jira fix version as archived. Defaults to false. | No | Boolean |
 | tickets | Comma-separated list of Jira Issue Keys to include in the release. Defaults to ''. | No | String |
