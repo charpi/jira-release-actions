@@ -13,7 +13,7 @@ This Github action connects your CI and your Jira instance by creating release(F
 
 |Name |Description |Required? |Type |
 |---|---|---|---|
-| jira_base_url  | URL of Jira instance. Example: https://{yourdomain}.atlassian.net | Yes | String |
+| jira_base_url  | URL of Jira instance. Example: https://<yourdomain>.atlassian.net | Yes | String |
 | jira_api_token | Access Token for Authorization. Example: HXe8DGg1iJd2AopzyxkFB7F2 [How To](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) | Yes | String |
 | jira_user_email | email of the user for which Access Token was created for. Example: human@example.com | Yes | String |
 | jira_project | Key of the jira project | Yes | String |
