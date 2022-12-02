@@ -1,6 +1,5 @@
-<p align="center">
+
 [![build-test](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/test.yml/badge.svg)](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/test.yml)
-</p>
 
 # Jira Release/Archive Action 
 
