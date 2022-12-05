@@ -26,4 +26,5 @@ jobs:
           jira_project: PROJ
           release_name: New Release Name
           archive: true
+          release: false
           
