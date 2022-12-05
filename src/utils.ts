@@ -1,10 +1,10 @@
 import { debug } from '@actions/core'
-import { isAxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ErrorResponse } from './types'
 
-// const isAxiosError = <ResponseType>(error: unknown): error is AxiosError<ResponseType> => {
-//   return axios.isAxiosError(error)
-// }
+const isAxiosError = <ResponseType>(error: unknown): error is AxiosError<ResponseType> => {
+  return axios.isAxiosError(error)
+}
 
 export const toMoreDescriptiveError = (error: unknown): Error | unknown => {
   if (
