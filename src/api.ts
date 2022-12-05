@@ -30,7 +30,7 @@ export class API {
     try {
       debug(JSON.stringify(body))
 
-      const response = await axios.put<JiraVersion>(`${this.domain}/rest/api/3/version/${id}`, body, { 
+      const response = await axios.put<JiraVersion>(`${this.domain}/rest/api/3/version/${id}`, body, {
         headers: this._headers()
       })
 
@@ -44,7 +44,7 @@ export class API {
   async updateIssue(ticket_id: string, version_id: string): Promise<any> {
     try {
       const response = await axios.put(
-        `${this.domain}/rest/api/3/issue/${ticket_id}`, 
+        `${this.domain}/rest/api/3/issue/${ticket_id}`,
         {
           update: {
             fixVersions: [

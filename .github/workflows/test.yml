@@ -25,5 +25,5 @@ jobs:
           jira_base_url: http://
           jira_project: PROJ
           release_name: New Release Name
-          archived: true
+          archive: true
           
