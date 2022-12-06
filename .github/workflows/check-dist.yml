@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - main
+      - feature/melbourne-time-zone
     paths-ignore:
       - '**.md'
   pull_request:
