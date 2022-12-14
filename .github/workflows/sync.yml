@@ -20,6 +20,7 @@ jobs:
       - name: create pull request
         run: |
           git checkout -b syncFromMain
+          git push --set-upstream origin syncFromMain
           gh pr create -B feature/melbourne-time-zone -H syncFromMain --title 'Merge main into melbourne-time-zone' --body 'Created by Github action'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
