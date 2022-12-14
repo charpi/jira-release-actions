@@ -25,7 +25,8 @@ jobs:
           jira_api_token: foobar
           jira_base_url: http://
           jira_project: PROJ
-          release_name: New Release Name
-          archive: true
+          release_name: New Release Name          
           release: false
+          create: true
+          archive: true
           
