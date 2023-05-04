@@ -20,7 +20,7 @@ jobs:
     name: Release Jira Fix Version
     runs-on: ubuntu-latest
     steps:
-      uses: justin-jhg/jira-release-actions@v1
+      uses: justin-jhg/jira-release-actions@v1.0
       with:
         jira_base_url: ${{ secrets.JIRA_BASE_URL }}
         jira_user_email: ${{ secrets.JIRA_USER_EMAIL }}
