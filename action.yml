@@ -20,6 +20,10 @@ inputs:
   release_name:
     description: Name of the release, fix version
     required: true
+  time_zone:
+    description: timezone used for setting release date, default UTC
+    default: 'England/Greenwich'
+    required: false
   release:
     description: 'Create the version as released'
     default: 'false'
@@ -40,7 +44,6 @@ inputs:
     description: Perform only read actions and show the logs.
     default: 'false'
     required: false
-
 
 runs:
   using: 'node16'

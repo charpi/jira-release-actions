@@ -7,6 +7,7 @@ export const SUBDOMAIN: string = getInput('jira_base_url', { required: true })
 
 // Release information
 export const RELEASE_NAME: string = getInput('release_name', { required: true })
+export const TIME_ZONE: string = getInput('time_zone', { required: false })
 export const PROJECT: string = getInput('jira_project', { required: true })
 export const TICKETS: string = getInput('tickets', { required: false })
 

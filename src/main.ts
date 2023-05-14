@@ -1,5 +1,17 @@
 import { info, setFailed } from '@actions/core'
-import { EMAIL, API_TOKEN, SUBDOMAIN, RELEASE_NAME, PROJECT, CREATE, TICKETS, DRY_RUN, RELEASE, ARCHIVE } from './env'
+import {
+  EMAIL,
+  API_TOKEN,
+  SUBDOMAIN,
+  RELEASE_NAME,
+  TIME_ZONE,
+  PROJECT,
+  CREATE,
+  TICKETS,
+  DRY_RUN,
+  RELEASE,
+  ARCHIVE
+} from './env'
 import { API } from './api'
 import * as DebugMessages from './constants/debug-messages'
 import { CreateVersionParams, UpdateVersionParams } from './types'
@@ -11,6 +23,7 @@ const printConfiguration = (): void => {
       * project: ${PROJECT}
       * subdomain: ${SUBDOMAIN}
       * release_name: ${RELEASE_NAME}
+      * time_zone: ${TIME_ZONE}
       * create: ${CREATE}
       * tickets: ${TICKETS}
       * release: ${RELEASE}
@@ -46,6 +59,9 @@ async function run(): Promise<void> {
     const release = RELEASE === true
     const archive = ARCHIVE === true
 
+    const localDateString = new Date().toLocaleString('en-US', { timeZone: TIME_ZONE })
+    const localISOString = new Date(localDateString).toISOString()
+
     if (version === undefined) {
       // Create new release and ignore ARCHIVE value
       info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
@@ -57,7 +73,7 @@ async function run(): Promise<void> {
           name: RELEASE_NAME,
           released: release === true && archive !== true,
           projectId: Number(project.id),
-          ...(release && { releaseDate: new Date().toISOString() }),
+          ...(release && { releaseDate: localISOString }),
           archived: false
         }
 
@@ -70,7 +86,7 @@ async function run(): Promise<void> {
 
       const versionToUpdate: UpdateVersionParams = {
         released: release,
-        ...(release && { releaseDate: new Date().toISOString() }),
+        ...(release && { releaseDate: localISOString }),
         archived: false
       }
       version = await api.updateVersion(version.id, versionToUpdate)

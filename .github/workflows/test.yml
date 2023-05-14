@@ -25,7 +25,8 @@ jobs:
           jira_api_token: foobar
           jira_base_url: http://
           jira_project: PROJ
-          release_name: New Release Name          
+          release_name: New Release Name
+          time_zone: Australia/Melbourne          
           release: false
           create: true
           archive: true

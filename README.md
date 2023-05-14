@@ -5,9 +5,9 @@
 
 This Github action connects your CI and your Jira instance by creating release(Fix Version) and assign Jira issues to the release as part of your CI process.
 
-- Create a JIRA release (Fix Version), release date will be today's date in UTC.
-- Assign JIRA Issue Key to the release (Fix Version)
-- Release can be created as archived as well
+- Create a JIRA release, release date supports timezone overwrite.
+- Assign JIRA Issues to release
+- Achive a JIRA release
 
 
 ## Usage
@@ -20,7 +20,7 @@ jobs:
     name: Release Jira Fix Version
     runs-on: ubuntu-latest
     steps:
-      uses: justin-jhg/jira-release-actions@v1.0
+      uses: justin-jhg/jira-release-actions@v1
       with:
         jira_base_url: ${{ secrets.JIRA_BASE_URL }}
         jira_user_email: ${{ secrets.JIRA_USER_EMAIL }}
@@ -30,6 +30,7 @@ jobs:
         tickets: CI-123,CI-456
         release: true
         archive: false
+        time_zone: Australia/Melbourne
 ```
 
 ----
@@ -45,6 +46,7 @@ jobs:
 | jira_user_email | email of the user for which **Access Token** was created for . Example: `human@example.com` | Yes | String |
 | jira_project | Key of the jira project | Yes | String |
 | release_name | Name of the release (Fix Version) | Yes | String |
+| time_zone | timezone for release date to be set, e.g. Australia/Melbourne, default is UTC time | No | String |
 | release | Mark Jira fix version as released. Defaults to false. | No | Boolean |
 | archive | Mark Jira fix version as archived. Defaults to false. | No | Boolean |
 | tickets | Comma-separated list of Jira Issue Keys to include in the release. Defaults to ''. | No | String |
