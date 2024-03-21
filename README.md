@@ -1,54 +1,61 @@
-# Jira Release Action
 
-<p align="center">
-  <a href="https://github.com/charpi/jira-release-actions"><img alt="jira-release-action status" src="https://github.com/carpi/jira-release-actions/workflows/build-test/badge.svg"></a>
-</p>
+[![build-test](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/test.yml/badge.svg)](https://github.com/Justin-JHG/jira-release-actions/actions/workflows/test.yml)
 
-This Github action connects your CI and your Jira instance by creating releases as part of your CI process.
+# Jira Release/Archive Action 
 
-The action can either mark an existing release as released or directly create a new one base on a tag name.
-The action can also automatically update the 'Fix Version' field of a list of Jira issues.
+This Github action connects your CI and your Jira instance by creating release(Fix Version) and assign Jira issues to the release as part of your CI process.
+
+- Create a JIRA release, release date supports timezone overwrite.
+- Assign JIRA Issues to release
+- Achive a JIRA release
+
 
 ## Usage
 
-### Input
-
-| Name | Description | Required |
-|---|---|---|
-| email  | Jira login | Y |
-| api_token | Jira api token | Y |
-| subdomain | Jira cloud instance. '[domain].atlassian.net' | Y |
-| jira_project | Key of the jira project | Y |
-| release_name | Name of the release | Y |
-| create | Boolean. Create automatically a jira release| N (default: false ) |
-| tickets | Comma separated list of ticket IDs to include in the release. Update the first release-version. | N (default: '') |
-| dry_run | Dump actions that would be taken | N (default: false) |
-
-### Example
+Example workflow:
 
 ```yaml
 jobs:
- get-next-app-version:
-    name: Get App Version Number
-    runs-on: ubuntu-latest
-    outputs:
-      version-id: ${{ steps.get-version.outputs.id }}
-    steps:
-      ...gets the latest version
-
-  release-next-app-version:
-    name: Release Jira Version
+  release-fix-version:
+    name: Release Jira Fix Version
     runs-on: ubuntu-latest
     steps:
-      uses: charpi/jira-release-action@latest
+      uses: justin-jhg/jira-release-actions@v1
       with:
-        email: ${{ secrets.JIRA_EMAIL }}
-        api-token: ${{ secrets.JIRA_TOKEN }}
-        subdomain: example
-        release_name: ${{ needs.get-next-app-version.outputs.version-id}}
+        jira_base_url: ${{ secrets.JIRA_BASE_URL }}
+        jira_user_email: ${{ secrets.JIRA_USER_EMAIL }}
+        jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+        jira_project: CI
+        release_name: v9.0.2
+        tickets: CI-123,CI-456
+        release: true
+        archive: false
+        time_zone: Australia/Melbourne
 ```
+
+----
+
+## Action Spec:
+
+### Inputs
+
+|Name |Description |Required? |Type |
+|---|---|---|---|
+| jira_base_url  | URL of Jira instance. Example: `https://<yourdomain>.atlassian.net` | Yes | String |
+| jira_api_token | **Access Token** for Authorization. Example: `HXe8DGg1iJd2AopzyxkFB7F2` ([How To](https://confluence.atlassian.com/cloud/api-tokens-938839638.html)) | Yes | String |
+| jira_user_email | email of the user for which **Access Token** was created for . Example: `human@example.com` | Yes | String |
+| jira_project | Key of the jira project | Yes | String |
+| release_name | Name of the release (Fix Version) | Yes | String |
+| time_zone | timezone for release date to be set, e.g. Australia/Melbourne, default is UTC time | No | String |
+| release | Mark Jira fix version as released. Defaults to false. | No | Boolean |
+| archive | Mark Jira fix version as archived. Defaults to false. | No | Boolean |
+| tickets | Comma-separated list of Jira Issue Keys to include in the release. Defaults to ''. | No | String |
+
+
 
 ## Reference
 
 * [Jira Basic authentication](https://developer.atlassian.com/server/jira/platform/basic-authentication/)
-* [Code inspiration](https://github.com/jimyang-9/release-jira-fix-version/)
+* [Repository the code was forked from](https://github.com/StalemateInc/jira-release-action)
+* https://github.com/actions/typescript-action
+* https://github.com/vercel/ncc

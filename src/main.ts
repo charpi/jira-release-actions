@@ -1,91 +1,130 @@
-import * as core from '@actions/core'
+import { info, setFailed } from '@actions/core'
 import {
   EMAIL,
   API_TOKEN,
   SUBDOMAIN,
   RELEASE_NAME,
+  TIME_ZONE,
   PROJECT,
   CREATE,
   TICKETS,
-  DRY_RUN
+  DRY_RUN,
+  RELEASE,
+  ARCHIVE
 } from './env'
-import {Project} from './api'
-import {Version} from './models'
+import { API } from './api'
+import * as DebugMessages from './constants/debug-messages'
+import { CreateVersionParams, UpdateVersionParams } from './types'
+
+const printConfiguration = (): void => {
+  info(`
+    CONFIGURED WITH OPTIONS:
+      * email ${EMAIL}
+      * project: ${PROJECT}
+      * subdomain: ${SUBDOMAIN}
+      * release_name: ${RELEASE_NAME}
+      * time_zone: ${TIME_ZONE}
+      * create: ${CREATE}
+      * tickets: ${TICKETS}
+      * release: ${RELEASE}
+      * archive: ${ARCHIVE}
+  `)
+}
 
 async function run(): Promise<void> {
   try {
     if (DRY_RUN === 'ci') {
-      core.info(`email ${EMAIL}`)
-      core.info(`project ${PROJECT}`)
-      core.info(`subdomain ${SUBDOMAIN}`)
-      core.info(`release ${RELEASE_NAME}`)
-      core.info(`create ${CREATE}`)
-      core.info(`tickets ${TICKETS}`)
+      printConfiguration()
+
       return
     }
+
+    const api = new API(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+    const project = await api.loadProject()
+    info(DebugMessages.PROJECT_LOADED(project.id))
 
     if (DRY_RUN === 'true') {
-      core.info(`email ${EMAIL}`)
-      core.info(`project ${PROJECT}`)
-      core.info(`subdomain ${SUBDOMAIN}`)
-      core.info(`release ${RELEASE_NAME}`)
-      core.info(`create ${CREATE}`)
-      core.info(`tickets ${TICKETS}`)
-      const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
-      core.info(`Project loaded ${project.project?.id}`)
-      const version = project.getVersion(RELEASE_NAME)
+      const version = project.versions.find((v) => v.name === RELEASE_NAME)
 
       if (version === undefined) {
-        core.info(`Version ${RELEASE_NAME} not found`)
+        info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
       } else {
-        core.info(`Version ${RELEASE_NAME} found`)
+        info(DebugMessages.VERSION_FOUND(RELEASE_NAME))
       }
+
       return
     }
 
-    const project = await Project.create(EMAIL, API_TOKEN, PROJECT, SUBDOMAIN)
+    let version = project.versions.find((v) => v.name === RELEASE_NAME)
+    const release = RELEASE === true
+    const archive = ARCHIVE === true
 
-    core.debug(`Project loaded ${project.project?.id}`)
-
-    let version = project.getVersion(RELEASE_NAME)
+    const localDateString = new Date().toLocaleString('en-US', { timeZone: TIME_ZONE })
+    const localISOString = new Date(localDateString).toISOString()
 
     if (version === undefined) {
-      core.debug(`Version ${RELEASE_NAME} not found`)
-      if (CREATE === 'true') {
-        core.debug(`Version ${RELEASE_NAME} is going to the created`)
-        const versionToCreate: Version = {
+      // Create new release and ignore ARCHIVE value
+      info(DebugMessages.VERSION_NOT_FOUND(RELEASE_NAME))
+
+      if (CREATE) {
+        info(DebugMessages.VERSION_WILL_BE_CREATED(RELEASE_NAME))
+
+        const versionToCreate: CreateVersionParams = {
           name: RELEASE_NAME,
-          archived: false,
-          released: true,
-          releaseDate: new Date().toISOString(),
-          projectId: Number(project.project?.id)
+          released: release === true && archive !== true,
+          projectId: Number(project.id),
+          ...(release && { releaseDate: localISOString }),
+          archived: false
         }
-        version = await project.createVersion(versionToCreate)
-        core.debug(versionToCreate.name)
+
+        version = await api.createVersion(versionToCreate)
+        info(DebugMessages.VERSION_CREATED(RELEASE_NAME))
       }
     } else {
-      core.debug(`Version ${RELEASE_NAME} found and is going to be updated`)
-      const versionToUpdate: Version = {
-        ...version,
-        self: undefined,
-        released: true,
-        releaseDate: new Date().toISOString(),
-        userReleaseDate: undefined
+      // update release and ignore ARCHIVE value
+      info(DebugMessages.VERSION_WILL_BE_UPDATED(RELEASE_NAME))
+
+      const versionToUpdate: UpdateVersionParams = {
+        released: release,
+        ...(release && { releaseDate: localISOString }),
+        archived: false
       }
-      version = await project.updateVersion(versionToUpdate)
+      version = await api.updateVersion(version.id, versionToUpdate)
+      info(DebugMessages.VERSION_UPDATED(RELEASE_NAME))
     }
 
+    // Assign JIRA issues to Release
     if (TICKETS !== '') {
       const tickets = TICKETS.split(',')
-      // eslint-disable-next-line github/array-foreach
-      tickets.forEach(ticket => {
-        core.debug(`Going to update ticket ${ticket}`)
-        if (version?.id !== undefined) project.updateIssue(ticket, version?.id)
-      })
+
+      for (const ticket of tickets) {
+        info(DebugMessages.UPDATING_TICKET(ticket))
+
+        if (version?.id !== undefined) {
+          await api.updateIssue(ticket, version.id)
+          info(DebugMessages.TICKET_UPDATED(ticket, version.id))
+        }
+      }
+    }
+
+    // Now let's do the ARCHIVE business
+    if (archive) {
+      info(DebugMessages.VERSION_WILL_BE_ARCHIVED(RELEASE_NAME))
+
+      // if archive then we ignore release value
+      const versionToUpdate: UpdateVersionParams = {
+        released: false,
+        releaseDate: undefined,
+        archived: archive
+      }
+      if (version?.id !== undefined) {
+        version = await api.updateVersion(version.id, versionToUpdate)
+        info(DebugMessages.VERSION_UPDATED(RELEASE_NAME))
+      }
     }
   } catch (_e) {
-    const e: Error = _e
-    core.setFailed(e)
+    const e: Error = _e as Error
+    setFailed(e)
   }
 }
 

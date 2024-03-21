@@ -1,35 +1,50 @@
-name: 'jira-release-action'
-description: 'Create or Update a Jira release'
-author: 'Nicolas Charpentier'
+name: 'Jira Release/Archive Action'
+description: 'Create, Release or Archive a Jira Fix Version'
+author: 'Justin Liu'
+branding:
+  icon: box
+  color: yellow
 inputs:
-  email:
+  jira_base_url:
+    description: URL of Jira instance. Example - https://<yourdomain>.atlassian.net
     required: true
-    description: Email address associated with api token
-  api_token:
+  jira_api_token:
+    description: Access Token for Authorization. Example - HXe8DGg1iJd2AopzyxkFB7F2 (How To)
     required: true
-    description: Jira API token
-  subdomain:
+  jira_user_email:
+    description: email of the user for which Access Token was created for . Example - human@example.com
     required: true
-    description: '{subdomain}.atlassian.net'
   jira_project:
+    description: ID of Jira project (usually all caps, like PROJ)
     required: true
-    description: 'Id of the JIRA project'
   release_name:
+    description: Name of the release, fix version
     required: true
-    description: Name of the release
-  create:
+  time_zone:
+    description: timezone used for setting release date, default UTC
+    default: 'England/Greenwich'
     required: false
-    description: Automatically create the release if not present in Jira
-    default: 'false' 
-  tickets:
-    required: false
-    description: Comma separated list of ticket IDs to include in the release. Update the first release-version.
-    default: ''
-  dry_run:
-    description: Dump the config
-    required: false
+  release:
+    description: 'Create the version as released'
     default: 'false'
+    required: false
+  archive:
+    description: 'Create the version as archived'
+    default: 'false'
+    required: false
+  tickets:
+    description: Comma-separated list of Jira issue keys to be assigned to the release.
+    default: ''
+    required: false
+  create:
+    description: Create a Jira release.
+    default: 'true'
+    required: false  
+  dry_run:
+    description: Perform only read actions and show the logs.
+    default: 'false'
+    required: false
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

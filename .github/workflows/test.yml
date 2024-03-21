@@ -5,26 +5,29 @@ on: # rebuild any PRs and main branch changes
     branches:
       - main
       - 'releases/*'
+      - feature/melbourne-time-zone
 
 jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
+      - uses: actions/checkout@v4
+      - run: npm install
+      - run: npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ./
         with:
           dry_run: ci
-          email: foo@bar
-          api_token: xxx
-          subdomain: foobar
+          jira_user_email: example@example.com
+          jira_api_token: foobar
+          jira_base_url: http://
           jira_project: PROJ
-          release_name: name
+          release_name: New Release Name
+          time_zone: Australia/Melbourne          
+          release: false
+          create: true
+          archive: true
           

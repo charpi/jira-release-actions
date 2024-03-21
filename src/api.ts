@@ -1,132 +1,86 @@
-import * as core from '@actions/core'
-import axios, {AxiosError} from 'axios'
-import {Version, ProjectDTO} from './models'
+import { debug } from '@actions/core'
+import axios from 'axios'
+import { CreateVersionParams, JiraProject, JiraVersion, UpdateVersionParams } from './types'
+import { toMoreDescriptiveError } from './utils'
 
-export class Project {
-  email: string
-  token: string
-  name: string
+export class API {
+  authToken: string
+  projectName: string
   domain: string
 
-  project?: ProjectDTO
-
   constructor(email: string, token: string, name: string, domain: string) {
-    this.email = email
-    this.token = token
-    this.name = name
+    this.authToken = `${Buffer.from(`${email}:${token}`).toString('base64')}`
+    this.projectName = name
     this.domain = domain
   }
 
-  getVersion(rel: string): Version | undefined {
-    if (this.project === undefined) return undefined
-    else {
-      const result = this.project.versions?.filter(i => i.name === rel)
-      if (result === undefined) return undefined
-      if (result.length === 0) {
-        return undefined
-      } else return result[0]
-    }
-  }
-
-  async createVersion(version: Version): Promise<Version> {
+  async createVersion(body: CreateVersionParams): Promise<JiraVersion> {
     try {
-      const response = await axios.post(
-        `https://${this.domain}.atlassian.net/rest/api/3/version`,
-        version,
-        this._authHeaders()
-      )
-      return response?.data
+      const response = await axios.post<JiraVersion>(`${this.domain}/rest/api/3/version`, body, {
+        headers: this._headers()
+      })
+
+      return response.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      throw toMoreDescriptiveError(error)
     }
   }
 
-  async updateVersion(version: Version): Promise<Version> {
+  async updateVersion(id: string, body: UpdateVersionParams): Promise<JiraVersion> {
     try {
-      core.debug(JSON.stringify(version))
-      const response = await axios.put(
-        `https://${this.domain}.atlassian.net/rest/api/3/version/${version.id}`,
-        version,
-        this._authHeaders()
-      )
-      return response?.data
+      debug(JSON.stringify(body))
+
+      const response = await axios.put<JiraVersion>(`${this.domain}/rest/api/3/version/${id}`, body, {
+        headers: this._headers()
+      })
+
+      return response.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      throw toMoreDescriptiveError(error)
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  async updateIssue(ticket: string, version: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async updateIssue(ticket_id: string, version_id: string): Promise<any> {
     try {
       const response = await axios.put(
-        `https://${this.domain}.atlassian.net/rest/api/3/issue/${ticket}`,
+        `${this.domain}/rest/api/3/issue/${ticket_id}`,
         {
           update: {
             fixVersions: [
               {
-                add: {id: version}
+                add: { id: version_id }
               }
             ]
           }
         },
-        this._authHeaders()
+        { headers: this._headers() }
       )
-      return response?.data
+
+      return response.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      throw toMoreDescriptiveError(error)
     }
   }
 
-  static async create(
-    email: string,
-    token: string,
-    name: string,
-    domain: string
-  ): Promise<Project> {
-    const result = new Project(email, token, name, domain)
-    return result._load()
-  }
-
-  async _load(): Promise<Project> {
+  async loadProject(): Promise<JiraProject> {
     try {
-      const response = await axios.get(
-        `https://${this.domain}.atlassian.net/rest/api/3/project/${this.name}?properties=versions,key,id,name`,
-        this._authHeaders()
+      const response = await axios.get<JiraProject>(
+        `${this.domain}/rest/api/3/project/${this.projectName}?properties=versions,key,id,name`,
+        { headers: this._headers() }
       )
-      this.project = response?.data
-      return this
+
+      return response.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      throw toMoreDescriptiveError(error)
     }
   }
 
-  _authHeaders(): Object {
+  _headers(): { Authorization: string; Accept: string; 'Content-Type': string } {
     return {
-      headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${this.email}:${this.token}`
-        ).toString('base64')}`,
-        Accept: 'application/json'
-      }
+      Authorization: `Basic ${this.authToken}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
     }
   }
 }
-
-const toMoreDescriptiveError = (error: unknown): Error | unknown => {
-  if (
-    isAxiosError(error) &&
-    error.response?.status === 404 &&
-    Array.isArray(error.response.data?.errorMessages)
-  ) {
-    return new Error(
-      `${error.response.data?.errorMessages[0]} (this may be due to a missing/invalid API key)`
-    )
-  } else {
-    core.debug(`error: ${error}`)
-    return error
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isAxiosError = (error: any): error is AxiosError =>
-  error?.isAxiosError ?? false
